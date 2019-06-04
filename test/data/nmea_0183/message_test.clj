@@ -6,10 +6,11 @@
 
 
 ;; Test sample file from https://en.wikipedia.org/wiki/NMEA_0183
+;; with added sample GRS from https://www.trimble.com/OEM_ReceiverHelp/V4.44/en/NMEA-0183messages_GRS.html
 (deftest sample-file-messages
   (with-open [in (io/input-stream "file:test/resources/test-messages.txt")]
     (let [in-fn (input/input-stream in)
-          msgs (repeatedly 15 #(msg/read-message in-fn))
+          msgs (repeatedly 16 #(msg/read-message in-fn))
           by-sentence (group-by :sentence msgs)]
 
       (println (first msgs))
@@ -20,7 +21,8 @@
              (count (by-sentence "GSA"))
              (count (by-sentence "RMC"))
              (count (by-sentence "RRE"))))
-      (is (= 7 (count (by-sentence "GSV")))))))
+      (is (= 7 (count (by-sentence "GSV"))))
+      (is (= 1 (count (by-sentence "GRS")))))))
 
 (defn- msg [string]
   (msg/read-message
