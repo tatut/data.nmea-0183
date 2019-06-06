@@ -53,7 +53,9 @@
 (s/def ::rate-of-turn ::t/double)
 (s/def ::data-status ::t/data-status)
 
+(s/def ::residuals-recomputed ::t/integer)
 (s/def ::range-residual ::t/double)
+(s/def ::grs-range-residuals (s/coll-of ::range-residual))
 (s/def ::range-residuals (s/map-of ::satellite-id ::range-residual))
 (s/def ::hpos-err-estimate ::t/double)
 (s/def ::vpos-err-estimate ::t/double)

@@ -117,6 +117,11 @@
   ::f/magnetic-variation
   ::f/variation-hemisphere)
 
+(define-sentence "GRS" ::grs
+  ::f/time
+  ::f/residuals-recomputed
+  [12 ::f/grs-range-residuals some?])
+
 ;; GSV - satellites in view
 ;; GNS - ?
 ;; GSA - GPS DOP and active satellites
@@ -124,6 +129,5 @@
 ;; HDT - Heading true
 ;; RMC - Recommended minimum navigation information
 ;; ROT - rate of turn
-;; RRE - ?
 ;; VTG - Track Made Good and Ground Speed
 ;; ZDA - Time and date

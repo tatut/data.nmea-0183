@@ -21,3 +21,18 @@
                :local-zone-hours 0
                :local-zone-minutes 0}
          (::s/zda (string->sentence "$GPZDA,095320.00,29,03,2019,00,00*69")))))
+
+(deftest test-gsa
+  (is (= #::f{:faa-mode :automatic
+              :fix-status :2d
+              :satellite-ids ["01" "12" "14" "15" "17" "19" "24" "25" "32"]
+              :position-dop 1.0
+              :horizontal-dop 0.7
+              :vertical-dop 0.7}
+         (::s/gsa (string->sentence "$GPGSA,A,2,01,12,14,15,17,19,24,25,32,,,,1.0,0.7,0.7*3F")))))
+
+(deftest test-grs
+  (is (= #::f {:time #::t {:hours 22 :minutes 3 :seconds 20.0}
+               :residuals-recomputed 0
+               :grs-range-residuals [-0.8 -0.2 -0.1 -0.2 0.8 0.6]}
+         (::s/grs (string->sentence "$GPGRS,220320.0,0,-0.8,-0.2,-0.1,-0.2,0.8,0.6,,,,,,,*55")))))
