@@ -37,15 +37,22 @@
     (when-not (and (= (control-characters cr) :cr)
                    (= (control-characters lf) :lf))
       (throw (ex-info "Expected end of message <CR><LF> bytes."
-                      {:read-bytes [(int cr) (int lf)]})))))
+                      {:type :parse-error
+                       :read-bytes [(int cr) (int lf)]})))))
 
 (defn- finalize-msg [{:keys [fields] :as msg}]
-  (let [talker (subs (first fields) 0 2)
-        sentence (subs (first fields) 2 5)]
-    (-> msg
-        (assoc :talker talker
-               :sentence sentence)
-        (update :fields subvec 1))))
+  (try
+    (let [talker (subs (first fields) 0 2)
+          sentence (subs (first fields) 2 5)]
+      (-> msg
+          (assoc :talker talker
+                 :sentence sentence)
+          (update :fields subvec 1)))
+    (catch java.lang.StringIndexOutOfBoundsException e
+      (throw (ex-info "Cannot identify talker and NMEA sentence"
+                      {:type :parse-error
+                       :field (first fields)}
+                      e)))))
 
 (defn read-message [in-fn]
   (if-let [start (start-character? (in-fn))]
@@ -64,7 +71,8 @@
                 (read-end in-fn)
                 (finalize-msg msg))
               (throw (ex-info "Checksum mismatch"
-                              {:calculated-checksum (:checksum msg)
+                              {:type :parse-error
+                               :calculated-checksum (:checksum msg)
                                :read-checksum checksum}))))
 
           (let [msg (update msg :checksum
@@ -91,5 +99,3 @@
               (= :field control)
               (recur (update msg :fields conj "")
                      (in-fn)))))))))
-
-

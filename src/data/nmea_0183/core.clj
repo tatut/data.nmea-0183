@@ -7,4 +7,11 @@
   "Read and parse one sentence from the input source."
   [input]
   (let [{:keys [sentence fields] :as m} (msg/read-message input)]
-    (merge m (sentences/parse-sentence sentence fields))))
+    (when-not sentence (throw (ex-info "No identifiable NMEA sentence found"
+                                       {:type :parse-error})))
+    (try
+      (merge m (sentences/parse-sentence sentence fields))
+      (catch java.lang.IllegalArgumentException e
+        (throw (ex-info (str "Cannot parse sentence " sentence " fields " fields)
+                        {:type :parse-error}
+                        e))))))
