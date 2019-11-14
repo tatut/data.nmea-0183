@@ -11,7 +11,7 @@
                                        {:type :parse-error})))
     (try
       (merge m (sentences/parse-sentence sentence fields))
-      (catch java.lang.IllegalArgumentException e
+      (catch Exception e
         (throw (ex-info (str "Cannot parse sentence " sentence " fields " fields)
                         {:type :parse-error}
                         e))))))
