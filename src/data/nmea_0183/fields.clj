@@ -70,6 +70,7 @@
   (let [spec (s/get-spec field-kw)]
     (when-not spec
       (throw (ex-info "Missing spec for field, this is a bug."
-                      {:field-kw field-kw})))
+                      {:type :internal-error
+                       :field-kw field-kw})))
     (when-not (str/blank? ascii-value)
       (t/from-ascii spec ascii-value))))
