@@ -50,7 +50,7 @@
           (update :fields subvec 1)))
     (catch java.lang.StringIndexOutOfBoundsException e
       (throw (ex-info "Cannot identify talker and NMEA sentence"
-                      {:type :parse-error
+                      {:type :unsupported-sentence
                        :field (first fields)}
                       e)))))
 

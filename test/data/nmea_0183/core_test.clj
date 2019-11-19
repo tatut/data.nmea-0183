@@ -49,3 +49,18 @@
       ;; check only that the messages are parsed correctly
       ;; FIXME: could add more validation
       (is msgs))))
+
+(deftest parse-unsupported-sentence
+  (testing "Parsing unsupported sentence throws :unsupported-sentence"
+    (let [error (try (sut/parse (input "$GPGNS,120226.00,6304.8655,N,02134.3280,E,D,09,0.9,-2.4,23,8,0724,S*77"))
+                     (catch Exception e
+                       e))
+          msg (ex-data error)]
+      (is (= (:type msg) :unsupported-sentence) error)))
+
+  (testing "Parsing unsupported sentence without talker throws :unsupported-sentence"
+    (let [error (try (sut/parse (input "$PSAT,HPR,120227.00,206.89,3.19,-1.0,N*34"))
+                     (catch Exception e
+                       e))
+          msg (ex-data error)]
+      (is (= (:type msg) :unsupported-sentence)))))
